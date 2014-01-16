@@ -39,8 +39,33 @@ public class ArraysAndStrings {
 		}
 	}
 
+	/* 1.2
+	 * Write code to reverse a C-Style String (C-String means that “abcd” is 
+	 * represented as five characters, including the null character )
+	 */
+	public static String reverse(String str){
+		// base case
+		if (str.length() <= 1) {
+			return str;
+		}
+		// recursive call
+		return str.charAt(str.length()-1) + reverse(str.substring(1, str.length()-1)) + str.charAt(0);
+	}
+
+	public static void testReverse(){
+		String [] to_test = {"",
+							 "a",
+							 "aa",
+							 "abcdefghijklmnopqrstuvwxyz"};
+		for (String str : to_test) {
+			System.out.println(reverse(str));
+		}
+	}
+
 	public static void main(String[] args) {
 		// 1.1
-		testNoRepeats();
+		// testNoRepeats();
+		// 1.2
+		testReverse();
 	}
 }
