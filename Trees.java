@@ -13,7 +13,7 @@ class Trees {
 		}
 	}
 
-	/* Preorder */
+	/* Preorder (visit the root, left branch, right branch, repeat) */
 	public static void testPreorder(Node root){
 		String r = recursivePreorder(root);
 		String i = iterativePreorder(root);
@@ -51,10 +51,42 @@ class Trees {
 		return result;
 	}
 
-	/* Inorder */
+	/* Inorder (left, root, right) */
+	public static void testInorder(Node root){
+		String r = recursiveInorder(root);
+		String i = iterativeInorder(root);
+		compare("Inorder Traversal", r,i);
+	}
 
-	public static void recursiveInorder(){
+	public static String recursiveInorder(Node root){
+		if (root != null){
+			String result = "";
+			String temp = recursiveInorder(root.left);
+			if (temp != null)
+				result += temp;
+			result += visit(root);
+			temp = recursiveInorder(root.right);
+			if (temp != null)
+				result += temp;
+			return result;
+		}
+		return null;
+	}
 
+	public static String iterativeInorder(Node root){
+		String result = "";
+		Stack<Node> stack = new Stack<Node>();
+		while(!stack.isEmpty() || root != null){
+			if (root != null){
+				stack.push(root);
+				root = root.left;
+			} else {
+				root = stack.pop();
+				result += visit(root);
+				root = root.right;
+			}
+		}
+		return result;
 	}
 
 	/* Helper functions */
@@ -63,7 +95,7 @@ class Trees {
 	}
 
 	public static void compare(String title, String recursive, String iterative){
-		System.out.println(title);
+		System.out.println("\t" + title);
 		System.out.println("Recursive: " + recursive);
 		System.out.println("Iterative: " + iterative);
 		System.out.println("Match: " + recursive.equals(iterative));
@@ -87,6 +119,6 @@ class Trees {
 		C.right = G;
 
 		testPreorder(A);
-
+		testInorder(A);
 	}
 }
