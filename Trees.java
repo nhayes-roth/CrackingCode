@@ -13,7 +13,7 @@ class Trees {
 		}
 	}
 
-	/* Preorder (visit the root, left branch, right branch, repeat) */
+	/* Preorder (root, left, right) */
 	public static void testPreorder(Node root){
 		String r = recursivePreorder(root);
 		String i = iterativePreorder(root);
@@ -97,6 +97,27 @@ class Trees {
 
 	public static String iterativePostorder(Node root){
 		String result = "";
+		Node last_visited = null;
+		Stack<Node> stack = new Stack<Node>();
+		while (!stack.isEmpty() || root != null){
+			// haven't reached a leaf or left-bound
+			if (root != null){
+				// push node and move left
+				stack.push(root);
+				root = root.left;
+			} else {
+				// if a right branch exists and we're coming from the left
+				if (stack.peek().right != null && last_visited != stack.peek().right){
+					// move right
+					root = stack.peek().right;
+				} else{
+					// move up
+					root = stack.pop();
+					result += visit(root);
+					last_visited = root;
+				}
+			}
+		}
 		return result;
 	}
 
@@ -110,6 +131,29 @@ class Trees {
 		System.out.println("Recursive: " + recursive);
 		System.out.println("Iterative: " + iterative);
 		System.out.println("Match: " + recursive.equals(iterative));
+	}
+
+	/*
+	 * Determines whether a tree is roughly balanced.
+	 * - no two leaf nodes differ in distance from the root by more than one
+	 * that is: return (maxDepth(A) - minDepth(A) <= 1)
+	 */
+	public static boolean balanced(Node root){
+		int max = maxDepth(root);
+		int min = minDepth(root);
+		System.out.println("max: " + max);
+		System.out.println("min: " + min);
+		return (maxDepth(root) - minDepth(root) <= 1);
+	}
+	public static int maxDepth(Node root){
+		return (root == null)?
+			0:
+			1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+	}
+	public static int minDepth(Node root){
+		return (root == null)?
+			0:
+			1 + Math.min(minDepth(root.left), minDepth(root.right));
 	}
 
 	/* Main */
@@ -129,8 +173,10 @@ class Trees {
 		C.left = F;
 		C.right = G;
 
-		testPreorder(A);
-		testInorder(A);
-		testPostorder(A);
+		// testPreorder(A);
+		// testInorder(A);
+		// testPostorder(A);
+
+		System.out.println(balanced(A));
 	}
 }
