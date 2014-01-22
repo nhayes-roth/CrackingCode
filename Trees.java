@@ -21,19 +21,13 @@ class Trees {
 	}
 
 	public static String recursivePreorder(Node root){
+		String result = "";
 		if (root != null){
-			String result 	= visit(root);
-			String[] left_right = {recursivePreorder(root.left),
-								   recursivePreorder(root.right)};
-			for (String s : left_right){
-				if (s != null){
-					result += s;
-				}
-			}
-			return result;
-		} else {
-			return null;
+			result += visit(root);
+			result += recursivePreorder(root.left);
+			result += recursivePreorder(root.right);
 		}
+		return result;
 	}
 
 	public static String iterativePreorder(Node root){
@@ -59,18 +53,13 @@ class Trees {
 	}
 
 	public static String recursiveInorder(Node root){
+		String result = "";
 		if (root != null){
-			String result = "";
-			String temp = recursiveInorder(root.left);
-			if (temp != null)
-				result += temp;
+			result += recursiveInorder(root.left);
 			result += visit(root);
-			temp = recursiveInorder(root.right);
-			if (temp != null)
-				result += temp;
-			return result;
+			result += recursiveInorder(root.right);
 		}
-		return null;
+		return result;
 	}
 
 	public static String iterativeInorder(Node root){
@@ -86,6 +75,28 @@ class Trees {
 				root = root.right;
 			}
 		}
+		return result;
+	}
+
+	/* Postorder (left, right, root) */
+	public static void testPostorder(Node root){
+		String r = recursivePostorder(root);
+		String i = iterativePostorder(root);
+		compare("Postorder Traversal", r,i);
+	}
+
+	public static String recursivePostorder(Node root){
+		String result = "";
+		if (root != null){
+			result += recursivePostorder(root.left);
+			result += recursivePostorder(root.right);
+			result += visit(root);
+		}
+		return result;
+	}
+
+	public static String iterativePostorder(Node root){
+		String result = "";
 		return result;
 	}
 
@@ -120,5 +131,6 @@ class Trees {
 
 		testPreorder(A);
 		testInorder(A);
+		testPostorder(A);
 	}
 }
