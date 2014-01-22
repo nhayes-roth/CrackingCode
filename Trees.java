@@ -1,4 +1,4 @@
-import java.util.Stack;
+import java.util.*;
 
 class Trees {
 
@@ -156,6 +156,25 @@ class Trees {
 			1 + Math.min(minDepth(root.left), minDepth(root.right));
 	}
 
+	/* bfs */
+	public static boolean bfs(Node root, Node goal){
+		LinkedList<Node> q = new LinkedList<Node>();
+		q.add(root);
+		while(!q.isEmpty()){
+			Node current = q.removeFirst();
+			if (current != null){
+				if (current == goal){
+					return true;
+				}
+				else {
+					q.add(current.left);
+					q.add(current.right);
+				}
+			}
+		}
+		return false;
+	}
+
 	/* Main */
 	public static void main(String[] args) {
 		Node A = new Node(1);
@@ -177,6 +196,8 @@ class Trees {
 		// testInorder(A);
 		// testPostorder(A);
 
-		System.out.println(balanced(A));
+		// System.out.println(balanced(A));
+
+		System.out.println(bfs(A, G));
 	}
 }
