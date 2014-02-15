@@ -256,9 +256,53 @@ class Trees {
 		}
 	}
 
+	// given a binary search tree, design an algorithm that creates
+	// a linked list of all nodes at each depth
+	// 	eg (a tree with depth D will return D LinkedLists)
+	private static ArrayList<LinkedList<Node>> depthLists(Node root){
+		ArrayList<LinkedList<Node>> lists = new ArrayList<LinkedList<Node>>();
+		LinkedList<Node> previous_list = new LinkedList<Node>();
+		LinkedList<Node> current_list = new LinkedList<Node>();
+		// add the first level (single-element list containing root)
+		current_list.add(root);
+		lists.add(current_list);
+		// loop
+		while(true){
+			// get the previous depth's list
+			previous_list = lists.get(lists.size()-1);
+			// exit if the previous list was empty
+			if (previous_list.isEmpty()){
+				break;
+			} else {
+				current_list = new LinkedList<Node>();
+				for (Node parent : previous_list){
+					if (parent.left != null){
+						current_list.add(parent.left);
+					}
+					if (parent.right != null) {
+						current_list.add(parent.right);
+					}
+				}
+				// add non-empty lists to the arraylist
+				if (!current_list.isEmpty()){
+					lists.add(current_list);
+				} else {
+					break;
+				}
+			}
+		}
+		return lists;
+	}
+
 	/* printing helper */
-	public static void print(String str){
+	public static void println(String str){
 		System.out.println(str);
+	}
+	public static void println(Object obj){
+		println("" + obj);
+	}
+	public static void print(String str){
+		System.out.print(str);
 	}
 	public static void print(Object obj){
 		print("" + obj);
@@ -267,8 +311,9 @@ class Trees {
 	/* Main */
 	public static void main(String[] args) {
 		balance();
+		ArrayList<LinkedList<Node>> lists = depthLists(nodes[0]);
 		// testPreorder(nodes[0]);
-		print(dfs(nodes[0], 12, true));
+		// print(dfs(nodes[0], 12, true));
 		// testInorder(A);
 		// testPostorder(A);
 		// testBalanced(A);
