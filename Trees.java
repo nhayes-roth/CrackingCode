@@ -11,6 +11,46 @@ class Trees {
 		public Node (int i){
 			this.data = i;
 		}
+
+		@Override
+		public String toString(){
+			StringBuilder sb = new StringBuilder();
+			sb.append("Val: ");
+			sb.append(this.data);
+			sb.append(" // Left: ");
+			sb.append(this.left == null?
+						"null":
+						this.left.data);
+			sb.append(" // Right: ");
+			sb.append(this.right == null?
+						"null":
+						this.right.data);
+			sb.append("\n");
+			return sb.toString();
+		}
+	}
+
+	/* static nodes for testing */
+	static Node[] nodes = new Node[15];
+
+	/* balance nodes array */
+	private static void balance(){
+		for (int i=nodes.length-1; i>=0; i--){
+			nodes[i] = new Node(i);
+			// indexes of children
+			int l_child = 1 + i*2;
+			int r_child = l_child + 1;
+			if (l_child < nodes.length){
+				nodes[i].left = nodes[l_child];
+			} else {
+				nodes[i].left = null;
+			}
+			if (r_child < nodes.length){
+				nodes[i].right = nodes[r_child];
+			} else {
+				nodes[i].right = null;
+			}
+		}
 	}
 
 	/* Preorder (root, left, right) */
@@ -127,10 +167,10 @@ class Trees {
 	}
 
 	public static void compare(String title, String recursive, String iterative){
-		System.out.println("\t" + title);
-		System.out.println("Recursive: " + recursive);
-		System.out.println("Iterative: " + iterative);
-		System.out.println("Match: " + recursive.equals(iterative));
+		System.out.println(title);
+		System.out.println("\t Recursive: " + recursive);
+		System.out.println("\t Iterative: " + iterative);
+		System.out.println("\t Match: " + recursive.equals(iterative));
 	}
 
 	/*
@@ -177,27 +217,13 @@ class Trees {
 
 	/* Main */
 	public static void main(String[] args) {
-		Node A = new Node(1);
-		Node B = new Node(2);
-		Node C = new Node(3);
-		Node D = new Node(4);
-		Node E = new Node(5);
-		Node F = new Node(6);
-		Node G = new Node(7);
-
-		A.left = B;
-		A.right = C;
-		B.left = D;
-		B.right = E;
-		C.left = F;
-		C.right = G;
-
-		// testPreorder(A);
+		balance();
+		testPreorder(nodes[0]);
 		// testInorder(A);
 		// testPostorder(A);
+		// testBalanced(A);
 
 		// System.out.println(balanced(A));
 
-		System.out.println(bfs(A, G));
 	}
 }
