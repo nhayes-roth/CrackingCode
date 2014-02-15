@@ -60,11 +60,83 @@ class SortSearch {
 		return sb.toString();
 	}
 
-	/* main */
-	public static void main(String[] args){
+	private static void test1(){
 		int[] A = {1, 3, 5, 0, 0, 0};
 		int[] B = {2, 4, 6};
 		sortIntoA(A, B);
 		System.out.println(toString(A));
+	}
+
+	// 9.2
+	// write a method to sort an array of strings
+	// so that all the anagrams are next to each other
+	private static void sortStringArray(String[] arr){
+		// sort each individual string
+		arr = sortEach(arr);
+		// sort the array based on string comparison
+		arr = Arrays.sort(arr);
+	}
+
+	private static String[] sortEach(String[] arr){
+		for (int i = 0; i < arr.length; i++){
+			char[] str = arr[i].toCharArray();
+			arr[i] = new String(quicksort(str));
+		}
+		return null;
+	}
+
+	// quicksort
+	private static char[] quicksort(char[] arr){
+		// measure length and choose a pivot in the middle
+		int length = arr.length;
+		int pivot = length/2;
+
+		// base case
+		if (length <= 1){
+			return arr;
+		}
+
+		// move inwards from left/right until
+		// - all smaller values are on the left
+		// - all larger values are on the right
+		int l = 0;
+		int r = length-1;
+		while (l <= pivot && r >= pivot){
+			if (arr[l] > arr[r]){
+				char tmp = arr[r];
+				arr[r] = arr[l];
+				arr[l] = tmp;
+				r--;
+			} else {
+				l++;
+			}
+		}
+		// recurse
+		char[] left = quicksort(Arrays.copyOfRange(arr, 0, pivot));
+		char[] right = quicksort(Arrays.copyOfRange(arr, pivot, length));
+		char[] to_return = new char[length];
+		copyInto(to_return, left, 0);
+		copyInto(to_return, right, pivot);
+		return to_return;
+	}
+
+	private static void copyInto(char[] target, char[] source, int index){
+		for (int i=0; i<source.length; i++){
+			target[index+i] = source[i];
+		}
+	}
+
+	private static void test2(){
+		String[] arr = {"zyx", "srq", "jea", "zyx", "srq", "jea", "zyx", "srq", "jea"};
+		sortStringArray(arr);
+		for (int i=0; i<arr.length; i++){
+			System.out.print((String)arr[i] + " ");
+		}
+	}
+
+	/* main */
+	public static void main(String[] args){
+		// test1();
+		test2();
 	}
 }
