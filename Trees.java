@@ -197,13 +197,13 @@ class Trees {
 	}
 
 	/* bfs */
-	public static boolean bfs(Node root, Node goal){
+	public static boolean bfs(Node root, int goal){
 		LinkedList<Node> q = new LinkedList<Node>();
 		q.add(root);
 		while(!q.isEmpty()){
 			Node current = q.removeFirst();
 			if (current != null){
-				if (current == goal){
+				if (current.data == goal){
 					return true;
 				}
 				else {
@@ -215,10 +215,60 @@ class Trees {
 		return false;
 	}
 
+	/* dfs */
+	private static boolean dfs(Node root, int goal){
+		return dfs(root, goal, false);
+	}
+	private static boolean dfs(Node root, int goal, boolean iterative){
+		// check root node
+		if (root == null){
+			return false;
+		}
+		if (iterative){
+			return dfs_iterative(root, goal);
+		} else {
+			return dfs_recursive(root, goal);
+		}
+	}
+	private static boolean dfs_iterative(Node root, int goal){
+		Stack<Node> stack = new Stack<Node>();
+		stack.push(root);
+		while(!stack.isEmpty()){
+			root = stack.pop();
+			if (root == null){
+				continue;
+			} else if (root.data == goal){
+				return true;
+			} else {
+				stack.push(root.left);
+				stack.push(root.right);
+			}
+		}
+		return false;
+	}
+	private static boolean dfs_recursive(Node root, int goal){
+		if (root == null) {
+			return false;
+		} else if (root.data == goal){
+			return true;
+		}else {
+			return (dfs_recursive(root.left, goal) || dfs_recursive(root.right, goal));
+		}
+	}
+
+	/* printing helper */
+	public static void print(String str){
+		System.out.println(str);
+	}
+	public static void print(Object obj){
+		print("" + obj);
+	}
+
 	/* Main */
 	public static void main(String[] args) {
 		balance();
-		testPreorder(nodes[0]);
+		// testPreorder(nodes[0]);
+		print(dfs(nodes[0], 12, true));
 		// testInorder(A);
 		// testPostorder(A);
 		// testBalanced(A);
