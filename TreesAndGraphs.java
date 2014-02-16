@@ -11,6 +11,46 @@ class Trees {
 		public Node (int i){
 			this.data = i;
 		}
+
+		@Override
+		public String toString(){
+			StringBuilder sb = new StringBuilder();
+			sb.append("Val: ");
+			sb.append(this.data);
+			sb.append(" // Left: ");
+			sb.append(this.left == null?
+						"null":
+						this.left.data);
+			sb.append(" // Right: ");
+			sb.append(this.right == null?
+						"null":
+						this.right.data);
+			sb.append("\n");
+			return sb.toString();
+		}
+	}
+
+	/* static nodes for testing */
+	static Node[] nodes = new Node[15];
+
+	/* balance nodes array */
+	private static void balance(){
+		for (int i=nodes.length-1; i>=0; i--){
+			nodes[i] = new Node(i);
+			// indexes of children
+			int l_child = 1 + i*2;
+			int r_child = l_child + 1;
+			if (l_child < nodes.length){
+				nodes[i].left = nodes[l_child];
+			} else {
+				nodes[i].left = null;
+			}
+			if (r_child < nodes.length){
+				nodes[i].right = nodes[r_child];
+			} else {
+				nodes[i].right = null;
+			}
+		}
 	}
 
 	/* Preorder (root, left, right) */
@@ -127,10 +167,10 @@ class Trees {
 	}
 
 	public static void compare(String title, String recursive, String iterative){
-		System.out.println("\t" + title);
-		System.out.println("Recursive: " + recursive);
-		System.out.println("Iterative: " + iterative);
-		System.out.println("Match: " + recursive.equals(iterative));
+		System.out.println(title);
+		System.out.println("\t Recursive: " + recursive);
+		System.out.println("\t Iterative: " + iterative);
+		System.out.println("\t Match: " + recursive.equals(iterative));
 	}
 
 	/*
@@ -157,13 +197,13 @@ class Trees {
 	}
 
 	/* bfs */
-	public static boolean bfs(Node root, Node goal){
+	public static boolean bfs(Node root, int goal){
 		LinkedList<Node> q = new LinkedList<Node>();
 		q.add(root);
 		while(!q.isEmpty()){
 			Node current = q.removeFirst();
 			if (current != null){
-				if (current == goal){
+				if (current.data == goal){
 					return true;
 				}
 				else {
@@ -175,29 +215,110 @@ class Trees {
 		return false;
 	}
 
+	/* dfs */
+	private static boolean dfs(Node root, int goal){
+		return dfs(root, goal, false);
+	}
+	private static boolean dfs(Node root, int goal, boolean iterative){
+		// check root node
+		if (root == null){
+			return false;
+		}
+		if (iterative){
+			return dfs_iterative(root, goal);
+		} else {
+			return dfs_recursive(root, goal);
+		}
+	}
+	private static boolean dfs_iterative(Node root, int goal){
+		Stack<Node> stack = new Stack<Node>();
+		stack.push(root);
+		while(!stack.isEmpty()){
+			root = stack.pop();
+			if (root == null){
+				continue;
+			} else if (root.data == goal){
+				return true;
+			} else {
+				stack.push(root.left);
+				stack.push(root.right);
+			}
+		}
+		return false;
+	}
+	private static boolean dfs_recursive(Node root, int goal){
+		if (root == null) {
+			return false;
+		} else if (root.data == goal){
+			return true;
+		}else {
+			return (dfs_recursive(root.left, goal) || dfs_recursive(root.right, goal));
+		}
+	}
+
+	// given a binary search tree, design an algorithm that creates
+	// a linked list of all nodes at each depth
+	// 	eg (a tree with depth D will return D LinkedLists)
+	private static ArrayList<LinkedList<Node>> depthLists(Node root){
+		ArrayList<LinkedList<Node>> lists = new ArrayList<LinkedList<Node>>();
+		LinkedList<Node> previous_list = new LinkedList<Node>();
+		LinkedList<Node> current_list = new LinkedList<Node>();
+		// add the first level (single-element list containing root)
+		current_list.add(root);
+		lists.add(current_list);
+		// loop
+		while(true){
+			// get the previous depth's list
+			previous_list = lists.get(lists.size()-1);
+			// exit if the previous list was empty
+			if (previous_list.isEmpty()){
+				break;
+			} else {
+				current_list = new LinkedList<Node>();
+				for (Node parent : previous_list){
+					if (parent.left != null){
+						current_list.add(parent.left);
+					}
+					if (parent.right != null) {
+						current_list.add(parent.right);
+					}
+				}
+				// add non-empty lists to the arraylist
+				if (!current_list.isEmpty()){
+					lists.add(current_list);
+				} else {
+					break;
+				}
+			}
+		}
+		return lists;
+	}
+
+	/* printing helper */
+	public static void println(String str){
+		System.out.println(str);
+	}
+	public static void println(Object obj){
+		println("" + obj);
+	}
+	public static void print(String str){
+		System.out.print(str);
+	}
+	public static void print(Object obj){
+		print("" + obj);
+	}
+
 	/* Main */
 	public static void main(String[] args) {
-		Node A = new Node(1);
-		Node B = new Node(2);
-		Node C = new Node(3);
-		Node D = new Node(4);
-		Node E = new Node(5);
-		Node F = new Node(6);
-		Node G = new Node(7);
-
-		A.left = B;
-		A.right = C;
-		B.left = D;
-		B.right = E;
-		C.left = F;
-		C.right = G;
-
-		// testPreorder(A);
+		balance();
+		ArrayList<LinkedList<Node>> lists = depthLists(nodes[0]);
+		// testPreorder(nodes[0]);
+		// print(dfs(nodes[0], 12, true));
 		// testInorder(A);
 		// testPostorder(A);
+		// testBalanced(A);
 
 		// System.out.println(balanced(A));
 
-		System.out.println(bfs(A, G));
 	}
 }
