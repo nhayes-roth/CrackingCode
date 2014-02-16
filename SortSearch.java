@@ -159,7 +159,7 @@ class SortSearch {
 				}
 			}
 			// sorted within [left, middle]
-			} else {
+			else {
 				// target is on right of middle
 				if (target < rotated[middle]){
 					right = middle - 1;
@@ -174,7 +174,9 @@ class SortSearch {
 
 	/* main */
 	public static void main(String[] args){
+		int[] rot = {15, 16, 19, 20, 25, 1, 3, 5, 7, 10, 14};
+		println(findInRotated(rot, 7));
 		// test1();
-		test2();
+		// test2();
 	}
 }
