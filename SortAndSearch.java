@@ -134,9 +134,49 @@ class SortSearch {
 		}
 	}
 
+	// 9.3 given a sorted array of n integers that has been
+	// rotated an unknown number of times, 
+	// 	- give an O(log(n)) argorithm that finds an element
+	// 	in the array. 
+	// 	- you may assume the array was originally sorted 
+	// 	in increasing order
+	private int findInRotated(int[] rotated, int target){
+		int left = 0;
+		int right = rotated.length - 1;
+		int middle;
+		while (left<=right){
+			middle = (left + right)/2;
+			if (rotated[middle] == target){
+				return middle;
+			}
+
+			// break within [left, middle]
+			if (rotated[left] <= rotated[middle]){
+				if (target > rotated[middle]){
+					left = middle + 1;
+				} else {
+					left = middle + 1;
+				}
+			}
+			// sorted within [left, middle]
+			else {
+				// target is on right of middle
+				if (target < rotated[middle]){
+					right = middle - 1;
+				// target is between left and middle
+				} else if (target < rotated[right]){
+					left = middle + 1 ;
+				}
+			}
+		}
+		return -1;
+	}
+
 	/* main */
 	public static void main(String[] args){
+		int[] rot = {15, 16, 19, 20, 25, 1, 3, 5, 7, 10, 14};
+		println(findInRotated(rot, 7));
 		// test1();
-		test2();
+		// test2();
 	}
 }
